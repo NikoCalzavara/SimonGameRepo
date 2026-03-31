@@ -48,8 +48,13 @@ fun Schermata1(modifier: Modifier = Modifier) {
     if(orientation == Configuration.ORIENTATION_PORTRAIT) { // Layout verticale
         Column(modifier = modifier){
             // Matrice 3x2
+            Matrice(
+                modifier = Modifier.weight(1f),
+                onColorClick = { }
+            )
 
             // Testo multiriga non editabile
+
 
             // I due bottoni
         }
@@ -67,14 +72,28 @@ fun Schermata1(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun Matrice(modifier: Modifier = Modifier){
-
+fun Matrice(modifier: Modifier = Modifier, onColorClick: () -> Unit){
+    // Per costruire la matrice 3x2 utilizzo una Column con 3 Row al suo interno
+    Column(modifier = modifier){
+        Row( modifier = Modifier.weight(1f)){
+            Riquadro(Color.Red, "R", {}, Modifier.weight(1f))
+            Riquadro(Color.Green, "G", {}, Modifier.weight(1f))
+        }
+        Row( modifier = Modifier.weight(1f)){
+            Riquadro(Color.Blue, "B", {}, Modifier.weight(1f))
+            Riquadro(Color.Magenta, "M", {}, Modifier.weight(1f))
+        }
+        Row( modifier = Modifier.weight(1f)){
+            Riquadro(Color.Yellow, "Y", {}, Modifier.weight(1f))
+            Riquadro(Color.Cyan, "C", {}, Modifier.weight(1f))
+        }
+    }
 }
 
 @Composable
 fun Riquadro(
     // Funzione compose che costruisce un singolo riquadro secondo i parametri che gli vengono passati
-    // Tale funzione viene chiamata volte dalla funzione Matrice, per costruire tutti i Box
+    // Tale funzione viene chiamata sei volte dalla funzione Matrice, per costruire tutti i Box
     colore: Color,
     lettera: String,
     onClick: () -> Unit,
@@ -106,3 +125,4 @@ fun GreetingPreview() {
         Schermata1()
     }
 }
+
