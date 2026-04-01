@@ -24,6 +24,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -53,6 +57,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Schermata1(modifier: Modifier = Modifier) {
     val orientation = LocalConfiguration.current.orientation
+    // Lo stato scende "verso il basso" come parametro
+    // Gli eventi, invece, salgono verso l'alto come funzioni lambda. Nel nostro caso l'evento parte da Riquadro e deve arrivare a Schermata1
+    var sequence by rememberSaveable { mutableStateOf("") }
+
     if(orientation == Configuration.ORIENTATION_PORTRAIT) { // Layout verticale
         Column(modifier = modifier
             .fillMaxSize()
@@ -70,7 +78,7 @@ fun Schermata1(modifier: Modifier = Modifier) {
             // Testo multi riga non editabile
             Text(modifier = modifier
                 .padding(vertical = 24.dp), // Aggiungo padding solo in verticale, non ai lati
-                text = "Test",
+                text = sequence.ifEmpty { "Premi un colore" }, // Metodo che permette di eliminare la verbosità di un blocco if/else
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -93,20 +101,30 @@ fun Schermata1(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun Matrice(modifier: Modifier = Modifier, onColorClick: () -> Unit){
+fun Matrice(modifier: Modifier = Modifier, onColorClick: (String) -> Unit){
     // Per costruire la matrice 3x2 utilizzo una Column con 3 Row al suo interno
     Column(modifier = modifier){
         Row( modifier = Modifier.weight(1f)){
-            Riquadro(Color.Red, {}, Modifier.weight(1f))
-            Riquadro(Color.Green, {}, Modifier.weight(1f))
+            // Richiamo le stringe da utilizzare nelle lambda "onClick" dei riquadri
+            val testoRosso = stringResource(R.string.r)
+            val testoVerde = stringResource(R.string.g)
+
+            Riquadro(Color.Red, { onColorClick(testoRosso) }, Modifier.weight(1f))
+            Riquadro(Color.Green, { onColorClick(testoVerde) }, Modifier.weight(1f))
         }
         Row( modifier = Modifier.weight(1f)){
-            Riquadro(Color.Blue, {}, Modifier.weight(1f))
-            Riquadro(Color.Magenta, {}, Modifier.weight(1f))
+            val testoBlu = stringResource(R.string.b)
+            val testoMagenta = stringResource(R.string.m)
+
+            Riquadro(Color.Blue, { onColorClick(testoBlu) }, Modifier.weight(1f))
+            Riquadro(Color.Magenta, { onColorClick(testoMagenta) }, Modifier.weight(1f))
         }
         Row( modifier = Modifier.weight(1f)){
-            Riquadro(Color.Yellow, {}, Modifier.weight(1f))
-            Riquadro(Color.Cyan,  {}, Modifier.weight(1f))
+            val testoViola = stringResource(R.string.y)
+            val testoCiano = stringResource(R.string.c)
+
+            Riquadro(Color.Yellow, { onColorClick(testoViola) }, Modifier.weight(1f))
+            Riquadro(Color.Cyan,  { onColorClick(testoCiano) }, Modifier.weight(1f))
         }
     }
 }
