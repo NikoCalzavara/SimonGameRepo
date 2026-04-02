@@ -1,9 +1,7 @@
 package com.example.simongame
 
-import android.R.attr.onClick
 import android.content.res.Configuration
 import android.os.Bundle
-import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -13,11 +11,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -68,11 +64,10 @@ fun Schermata1(modifier: Modifier = Modifier) {
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-
             // Matrice 3x2
             Matrice(
                 modifier = Modifier.weight(3f),
-                onColorClick = { }
+                onColorClick = { coloreCliccato -> sequence = "$sequence$coloreCliccato, " }
             )
 
             // Testo multi riga non editabile
@@ -120,10 +115,10 @@ fun Matrice(modifier: Modifier = Modifier, onColorClick: (String) -> Unit){
             Riquadro(Color.Magenta, { onColorClick(testoMagenta) }, Modifier.weight(1f))
         }
         Row( modifier = Modifier.weight(1f)){
-            val testoViola = stringResource(R.string.y)
+            val testoGiallo = stringResource(R.string.y)
             val testoCiano = stringResource(R.string.c)
 
-            Riquadro(Color.Yellow, { onColorClick(testoViola) }, Modifier.weight(1f))
+            Riquadro(Color.Yellow, { onColorClick(testoGiallo) }, Modifier.weight(1f))
             Riquadro(Color.Cyan,  { onColorClick(testoCiano) }, Modifier.weight(1f))
         }
     }
