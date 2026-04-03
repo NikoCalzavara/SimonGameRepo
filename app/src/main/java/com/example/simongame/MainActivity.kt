@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -55,7 +56,8 @@ fun Schermata1(modifier: Modifier = Modifier) {
     val orientation = LocalConfiguration.current.orientation
     // Lo stato scende "verso il basso" come parametro
     // Gli eventi, invece, salgono verso l'alto come funzioni lambda. Nel nostro caso l'evento parte da Riquadro e deve arrivare a Schermata1
-    var sequence by rememberSaveable { mutableStateOf("") }
+    // Utilizzo una List così posso sfruttare direttamente il metodo per convertirla in stringa e non dover formattare il tutto usando if/else
+    var sequence by rememberSaveable { mutableStateOf(listOf<String>()) }
 
     if(orientation == Configuration.ORIENTATION_PORTRAIT) { // Layout verticale
         Column(modifier = modifier
@@ -67,13 +69,14 @@ fun Schermata1(modifier: Modifier = Modifier) {
             // Matrice 3x2
             Matrice(
                 modifier = Modifier.weight(3f),
-                onColorClick = { coloreCliccato -> sequence = "$sequence$coloreCliccato, " }
+                onColorClick = { coloreCliccato -> sequence = sequence + coloreCliccato }
             )
 
             // Testo multi riga non editabile
             Text(modifier = modifier
                 .padding(vertical = 24.dp), // Aggiungo padding solo in verticale, non ai lati
-                text = sequence.ifEmpty { "Premi un colore" }, // Metodo che permette di eliminare la verbosità di un blocco if/else
+                // Utilizzo il metodo joinToString in quanto mi permette di convertire la lista in stringa e scegliere il separatore che preferisco
+                text = if (sequence.isEmpty()) stringResource(R.string.premi_un_colore) else sequence.joinToString(", "),
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -84,11 +87,36 @@ fun Schermata1(modifier: Modifier = Modifier) {
         }
     }
     else { // Layout orizzontale, matrice con affianco testo e pulsanti. Testo e pulsanti uno sotto l'altro
-        Row(modifier = modifier){
+        Row(modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ){
             // Matrice 3x2
-
-
+            Matrice(
+                modifier = Modifier.weight(3f),
+                // coloreCliccato rappresenta la stringa inviata dal riquadro
+                onColorClick = { coloreCliccato -> sequence = sequence + coloreCliccato }
+            )
             // Colonna con dentro testo e pulsanti
+            Column(
+                modifier = Modifier
+                    .weight(2f)
+                    .fillMaxHeight(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement =  Arrangement.Center
+            ){
+                Text(modifier = modifier
+                    .padding(horizontal = 24.dp), // Aggiungo padding solo in verticale, non ai lati
+                    text = if (sequence.isEmpty()) stringResource(R.string.premi_un_colore) else sequence.joinToString(", "),
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                // I due bottoni
+                Pulsanti(modifier = Modifier
+                )
+            }
 
         }
     }
@@ -135,7 +163,7 @@ fun Riquadro(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(8.dp) // Padding per spaziare i singoli Box
+            .padding(8.dp) // Padding per spaziare i singoli Box all'interno della matrice
             .background(
                 color = coloreRiquadro,
                 shape = RoundedCornerShape(16.dp) // Arrotonda gli angoli dei Box
@@ -162,7 +190,10 @@ fun Pulsanti(modifier : Modifier = Modifier) {
 
 
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    //device = "spec:parent=pixel_5,orientation=landscape"
+    )
 @Composable
 fun GreetingPreview() {
     SimonGameTheme {
