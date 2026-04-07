@@ -29,7 +29,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun Schermata1(modifier: Modifier = Modifier, onStartClicked: () -> Unit) {
+// Obbligatorio passare una funzione lambda che verrà chiamata quando verrà premuto il pulsante "fine partita"
+// Il Modifier invece ha un valore di default
+fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: () -> Unit) {
     val orientation = LocalConfiguration.current.orientation
     // Lo stato scende "verso il basso" come parametro
     // Gli eventi, invece, salgono verso l'alto come funzioni lambda. Nel nostro caso l'evento parte da Riquadro e deve arrivare a Schermata1
@@ -59,7 +61,7 @@ fun Schermata1(modifier: Modifier = Modifier, onStartClicked: () -> Unit) {
             )
 
             // I due bottoni
-            Pulsanti(modifier = Modifier.fillMaxWidth(), onStartClicked)
+            Pulsanti(modifier = Modifier.fillMaxWidth(), onFinePartitaClicked, onCancellaClicked = { sequence = emptyList() } )
         }
     }
     else { // Layout orizzontale, matrice con affianco testo e pulsanti. Testo e pulsanti uno sotto l'altro
@@ -90,7 +92,7 @@ fun Schermata1(modifier: Modifier = Modifier, onStartClicked: () -> Unit) {
                     fontWeight = FontWeight.Bold
                 )
                 // I due bottoni
-                Pulsanti(modifier = Modifier, onStartClicked)
+                Pulsanti(modifier = Modifier, onFinePartitaClicked, onCancellaClicked = { sequence = emptyList() })
             }
 
         }
@@ -149,12 +151,12 @@ fun Riquadro(
 }
 
 @Composable
-fun Pulsanti(modifier : Modifier = Modifier, onFinePartitaClicked: () -> Unit) {
+fun Pulsanti(modifier : Modifier = Modifier, onFinePartitaClicked: () -> Unit, onCancellaClicked: () -> Unit) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = { onCancellaClicked() }) {
             Text(text = stringResource(R.string.cancella))
         }
         Button(onClick = { onFinePartitaClicked() }) {

@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Schermata2(modifier : Modifier = Modifier, onBackClicked: () -> Unit) {
+fun Schermata2(modifier : Modifier = Modifier) {
     Column( modifier = modifier
             .fillMaxSize()
             .padding(16.dp),

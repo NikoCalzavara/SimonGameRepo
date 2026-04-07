@@ -19,18 +19,20 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SimonGameTheme {
+                // Implementazione della navigazione tra schermate
                 val navigationController = rememberNavController()
 
                 Scaffold( modifier = Modifier.fillMaxSize()){ innerPadding ->
                     NavHost(
                         navController = navigationController, startDestination = "schermata1",
                         modifier = Modifier.padding(innerPadding)
-                    ){
+                    ){ // Definizione del grafo di navigazione
                         composable("schermata1"){
-                            Schermata1(onStartClicked = { navigationController.navigate("schermata2") } )
+                            // Alla Schermata1 passo una funzione lambda che verrà chiamata quando verrà premuto il pulsante "fine partita"
+                            Schermata1(onFinePartitaClicked = { navigationController.navigate("schermata2") } )
                         }
                         composable("schermata2"){
-                            Schermata2(onBackClicked = { navigationController.navigate("schermata1") })
+                            Schermata2()
                         }
                     }
                 }
