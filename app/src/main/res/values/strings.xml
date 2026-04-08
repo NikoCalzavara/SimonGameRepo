@@ -9,4 +9,6 @@
     <string name="y">Y</string>
     <string name="c">C</string>
     <string name="premi_un_colore">Premi un colore</string>
+    <string name="partite_concluse">Partite Concluse</string>
+    <string name="nessun_colore">Nessun colore</string>
 </resources>
