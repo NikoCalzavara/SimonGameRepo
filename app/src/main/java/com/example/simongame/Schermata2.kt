@@ -68,7 +68,7 @@ fun Schermata2Preview() {
         listOf("R", "G"),
         listOf("B"),
         // Sequenza lunga per testare il troncamento e lo spazio tra counter e sequenza
-        listOf("R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B",)
+        listOf("R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B")
     )
 
     Schermata2(

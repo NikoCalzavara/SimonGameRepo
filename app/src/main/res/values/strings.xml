@@ -2,12 +2,12 @@
     <string name="app_name">SimonGame</string>
     <string name="cancella">Cancella</string>
     <string name="fine_partita">Fine partita</string>
-    <string name="r">R</string>
-    <string name="g">G</string>
-    <string name="b">B</string>
-    <string name="m">M</string>
-    <string name="y">Y</string>
-    <string name="c">C</string>
+    <string name="r" translatable="false">R</string>
+    <string name="g" translatable="false">G</string>
+    <string name="b" translatable="false">B</string>
+    <string name="m" translatable="false">M</string>
+    <string name="y" translatable="false">Y</string>
+    <string name="c" translatable="false">C</string>
     <string name="premi_un_colore">Premi un colore</string>
     <string name="partite_concluse">Partite Concluse</string>
     <string name="nessun_colore">Nessun colore</string>
