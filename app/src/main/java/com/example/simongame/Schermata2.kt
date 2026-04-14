@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun Schermata2(modifier : Modifier = Modifier, partite: List<List<String>>) {
@@ -31,7 +32,7 @@ fun Schermata2(modifier : Modifier = Modifier, partite: List<List<String>>) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-        // Utilizzo una LazyColumn alla quale passo la lista di partite. La LazyColumn eseguirà il blocco di codice specificato per ogni singolo elemento della lista
+        // Utilizzo una LazyColumn alla quale passo la lista di partite. La LazyColumn eseguirà il blocco di codice specificato per ogni singolo elemento della lista "partite"
         LazyColumn( modifier = Modifier.fillMaxSize()) {
             items(partite){ partita ->
                 // Ora specifico il codice da eseguire per ogni elemento della lista di partite
@@ -42,6 +43,7 @@ fun Schermata2(modifier : Modifier = Modifier, partite: List<List<String>>) {
                     verticalAlignment = Alignment.CenterVertically
                     ) {
                     Text( // Testo che sta a sinistra e mostra il numero di rettangoli premuti
+                        modifier = modifier.padding(horizontal = 12.dp), // Per spaziare il numero dalla stringa con la sequenza di tasti
                         text = "${partita.size}",
                         fontWeight = FontWeight.Bold,
                         fontSize = 24.sp
@@ -56,4 +58,21 @@ fun Schermata2(modifier : Modifier = Modifier, partite: List<List<String>>) {
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun Schermata2Preview() {
+    val dati = listOf(
+        listOf("R", "G", "B"),
+        listOf("R", "G"),
+        listOf("B"),
+        // Sequenza lunga per testare il troncamento e lo spazio tra counter e sequenza
+        listOf("R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B",)
+    )
+
+    Schermata2(
+        // Devo passare una lista di liste
+        partite = dati
+    )
 }
