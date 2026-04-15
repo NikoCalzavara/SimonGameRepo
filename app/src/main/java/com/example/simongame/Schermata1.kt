@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -54,11 +55,13 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
 
             // Testo multi riga non editabile
             Text(modifier = modifier
-                .padding(vertical = 24.dp), // Aggiungo padding solo in verticale, non ai lati
+                .padding(vertical = 24.dp) // Aggiungo padding solo in verticale, non ai lati
+                .heightIn(max = 100.dp), // Impongo un'altezza massima per la sequenza in modo tale che non comprima troppo la matrice e non "spinga" in basso i pulsanti
                 // Utilizzo il metodo joinToString in quanto mi permette di convertire la lista in stringa e scegliere il separatore che preferisco
                 text = if (sequence.isEmpty()) stringResource(R.string.premi_un_colore) else sequence.joinToString(", "),
                 fontSize = 30.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                maxLines = 5
             )
 
             // I due bottoni
@@ -92,7 +95,9 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
                 verticalArrangement =  Arrangement.Center
             ){
                 Text(modifier = modifier
-                    .padding(horizontal = 24.dp), // Aggiungo padding solo in verticale, non ai lati
+                    .padding(horizontal = 24.dp) // Aggiungo padding solo in verticale, non ai lati
+                    .padding(vertical = 12.dp)
+                    .heightIn(max = 100.dp),
                     text = if (sequence.isEmpty()) stringResource(R.string.premi_un_colore) else sequence.joinToString(", "),
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
