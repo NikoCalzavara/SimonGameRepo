@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -26,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,7 +40,9 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
     // Utilizzo una List così posso sfruttare direttamente il metodo per convertirla in stringa e non dover formattare il tutto usando if/else
     var sequence by rememberSaveable { mutableStateOf(listOf<String>()) }
 
-    if(orientation == Configuration.ORIENTATION_PORTRAIT) { // Layout verticale
+
+    // Layout verticale
+    if(orientation == Configuration.ORIENTATION_PORTRAIT) {
         Column(modifier = modifier
             .fillMaxSize()
             .padding(16.dp), // Aggiungo del padding per non avere tutto a filo dello schermo
@@ -55,13 +57,13 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
 
             // Testo multi riga non editabile
             Text(modifier = modifier
-                .padding(vertical = 24.dp) // Aggiungo padding solo in verticale, non ai lati
-                .heightIn(max = 100.dp), // Impongo un'altezza massima per la sequenza in modo tale che non comprima troppo la matrice e non "spinga" in basso i pulsanti
+                .padding(vertical = 24.dp), // Aggiungo padding solo in verticale, non ai lati
                 // Utilizzo il metodo joinToString in quanto mi permette di convertire la lista in stringa e scegliere il separatore che preferisco
                 text = if (sequence.isEmpty()) stringResource(R.string.premi_un_colore) else sequence.joinToString(", "),
+                maxLines = 1,
+                overflow = TextOverflow.StartEllipsis,
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
-                maxLines = 5
             )
 
             // I due bottoni
@@ -73,7 +75,9 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
                 onCancellaClicked = { sequence = emptyList() } )
         }
     }
-    else { // Layout orizzontale, matrice con affianco testo e pulsanti. Testo e pulsanti uno sotto l'altro
+
+    // Layout orizzontale, matrice con affianco testo e pulsanti. Testo e pulsanti uno sotto l'altro
+    else {
         Row(modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
@@ -96,14 +100,15 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
             ){
                 Text(modifier = modifier
                     .padding(horizontal = 24.dp) // Aggiungo padding solo in verticale, non ai lati
-                    .padding(vertical = 12.dp)
-                    .heightIn(max = 100.dp),
+                    .padding(vertical = 12.dp),
+                    maxLines = 1,
+                    overflow = TextOverflow.StartEllipsis,
                     text = if (sequence.isEmpty()) stringResource(R.string.premi_un_colore) else sequence.joinToString(", "),
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
                 )
                 // I due bottoni
-                Pulsanti(modifier = Modifier,
+                Pulsanti(modifier = Modifier.fillMaxWidth(),
                     onFinePartitaClicked = {
                         onFinePartitaClicked(sequence) // Invio la lista al MainActivity
                         sequence = emptyList() // Svuoto la sequenza attuale
