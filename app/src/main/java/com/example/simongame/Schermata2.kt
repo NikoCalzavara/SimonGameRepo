@@ -34,16 +34,16 @@ fun Schermata2(modifier : Modifier = Modifier, partite: List<List<String>>) {
         )
         // Utilizzo una LazyColumn alla quale passo la lista di partite. La LazyColumn eseguirà il blocco di codice specificato per ogni singolo elemento della lista "partite"
         LazyColumn( modifier = Modifier.fillMaxSize()) {
-            items(partite){ partita ->
+            items(partite){ partita -> // Ogni singola partita è a sua volta una lista
                 // Ora specifico il codice da eseguire per ogni elemento della lista di partite
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                    .padding(vertical = 8.dp), // Spazio tra un elemento e l'altro della lista
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                     ) {
                     Text( // Testo che sta a sinistra e mostra il numero di rettangoli premuti
-                        modifier = modifier.padding(horizontal = 12.dp), // Per spaziare il numero dalla stringa con la sequenza di tasti
+                        modifier = modifier.padding(end = 12.dp), // Per spaziare il numero dalla stringa con la sequenza di tasti
                         text = "${partita.size}",
                         fontWeight = FontWeight.Bold,
                         fontSize = 24.sp

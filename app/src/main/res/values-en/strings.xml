@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SimonGame</string>
     <string name="cancella">Clear</string>
     <string name="fine_partita">End game</string>
     <string name="premi_un_colore">Press any color</string>

@@ -37,9 +37,8 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
     val orientation = LocalConfiguration.current.orientation
     // Lo stato scende "verso il basso" come parametro
     // Gli eventi, invece, salgono verso l'alto come funzioni lambda. Nel nostro caso l'evento parte da Riquadro e deve arrivare a Schermata1
-    // Utilizzo una List così posso sfruttare direttamente il metodo per convertirla in stringa e non dover formattare il tutto usando if/else
-    var sequence by rememberSaveable { mutableStateOf(listOf<String>()) }
 
+    var sequence by rememberSaveable { mutableStateOf(listOf<String>()) } // Utilizzo una List così posso sfruttare direttamente il metodo per convertirla in stringa e non dover formattare il tutto usando if/else
 
     // Layout verticale
     if(orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -49,14 +48,12 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            // Matrice 3x2
-            Matrice(
+            Matrice( // Matrice 3x2
                 modifier = Modifier.weight(3f),
-                onColorClick = { coloreCliccato -> sequence = sequence + coloreCliccato }
+                onColorClick = { coloreCliccato -> sequence = sequence + coloreCliccato } // coloreCliccato rappresenta la stringa inviata dal riquadro
             )
 
-            // Testo multi riga non editabile
-            Text(modifier = modifier
+            Text(modifier = modifier // Testo non editabile
                 .padding(vertical = 24.dp), // Aggiungo padding solo in verticale, non ai lati
                 // Utilizzo il metodo joinToString in quanto mi permette di convertire la lista in stringa e scegliere il separatore che preferisco
                 text = if (sequence.isEmpty()) stringResource(R.string.premi_un_colore) else sequence.joinToString(", "),
@@ -87,8 +84,7 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
             // Matrice 3x2
             Matrice(
                 modifier = Modifier.weight(3f),
-                // coloreCliccato rappresenta la stringa inviata dal riquadro
-                onColorClick = { coloreCliccato -> sequence = sequence + coloreCliccato }
+                onColorClick = { coloreCliccato -> sequence = sequence + coloreCliccato } // coloreCliccato rappresenta la stringa inviata dal riquadro
             )
             // Colonna con dentro testo e pulsanti
             Column(
