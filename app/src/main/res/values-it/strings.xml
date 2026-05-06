@@ -1,3 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="premi_un_colore">Premi un colore</string>
+    <string name="partite_concluse">Partite Concluse</string>
+    <string name="nessun_colore">Nessun colore</string>
+    <string name="cancella">Cancella</string>
+    <string name="fine_partita">Fine partita</string>
 </resources>
