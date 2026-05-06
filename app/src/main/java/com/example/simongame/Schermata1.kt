@@ -57,8 +57,8 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
                 .padding(vertical = 24.dp), // Aggiungo padding solo in verticale, non ai lati
                 // Utilizzo il metodo joinToString in quanto mi permette di convertire la lista in stringa e scegliere il separatore che preferisco
                 text = if (sequence.isEmpty()) stringResource(R.string.premi_un_colore) else sequence.joinToString(", "),
-                maxLines = 1,
-                overflow = TextOverflow.StartEllipsis,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
             )
@@ -95,10 +95,10 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
                 verticalArrangement =  Arrangement.Center
             ){
                 Text(modifier = modifier
-                    .padding(horizontal = 24.dp) // Aggiungo padding solo in verticale, non ai lati
+                    .padding(horizontal = 24.dp)
                     .padding(vertical = 12.dp),
-                    maxLines = 1,
-                    overflow = TextOverflow.StartEllipsis,
+                    maxLines = 5, // Supporto 2 righe in più rispetto al layout verticale
+                    overflow = TextOverflow.Ellipsis,
                     text = if (sequence.isEmpty()) stringResource(R.string.premi_un_colore) else sequence.joinToString(", "),
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
