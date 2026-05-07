@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity("tabella_partite")
+@Entity("tabella_partite") // Definendo un'entità Room crea automaticamente la tabella a essa associata
 data class Partita(
     @PrimaryKey (autoGenerate = true) // Così facendo lascio che sia Room a creare un identificativo unico progressivo a ogni partita inserita
     val id: Int = 0, // Devo fornire un parametro di default altrimenti Kotlin genera errore in compilazione. Room ignorerà tale valore e assegnerà l'ID corretto

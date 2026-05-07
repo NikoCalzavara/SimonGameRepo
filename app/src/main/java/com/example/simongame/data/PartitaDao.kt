@@ -13,7 +13,6 @@ interface PartitaDao {
     @Insert
     suspend fun inserisciPartita(partita: Partita) // Inserimento di una singola partita nel database
     /* L'indicazione "suspend" dice ad Android di eseguire la query in un thread diverso da quello su cui sta girando l'app,
-    *  per evitare che la UI si possa bloccare qualora la query dovesse richiedere del tempo.
-    */
+    *  per evitare che la UI si possa bloccare qualora la query dovesse richiedere del tempo. */
 
 }
