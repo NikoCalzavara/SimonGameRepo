@@ -24,4 +24,24 @@ class GameViewModel(private val dao: PartitaDao) : ViewModel() {
 
     var isInPausa by mutableStateOf(false)
 
+    fun avviaPartita() { // Invocata quando si preme "Avvia partita"
+        partitaInCorso = true
+        isTurnoComputer = true
+        sequenzaComputer = emptyList()
+        sequenzaGiocatore = emptyList()
+
+    }
+
+    fun pausaRiprendi() {
+        isInPausa = !isInPausa // Inverte il valore (se era false diventa true, e viceversa)
+    }
+
+    fun colorePremuto(coloreCliccato: String) { // Chiamata quando l'utente clicca un riquadro
+
+    }
+
+    fun finePartita() {
+        partitaInCorso = false
+
+    }
 }
