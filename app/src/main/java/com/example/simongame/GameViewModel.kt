@@ -13,7 +13,9 @@ import kotlinx.coroutines.launch
 *  Così facendo sarò in grado di gestire la logica del gioco in maniera indipendente dalle varie ricomposizioni della UI,
 *  potendo quindi gestire i cambi di configurazione durante la riproduzione, le coroutine... */
 
-class GameViewModel(private val dao: PartitaDao) : ViewModel() {
+class GameViewModel : ViewModel() {
+
+    lateinit var dao: PartitaDao
 
     // All'interno del ViewModel colloco tutte le variabili necessarie al funzionamento del gioco
     // Utilizzo mutableStateOf in modo da scatenare la ricomposizione della UI dopo i cambiamenti
@@ -110,6 +112,7 @@ class GameViewModel(private val dao: PartitaDao) : ViewModel() {
         }
 
         sequenzaGiocatore += "X" // Aggiungo un carattere fittizio
+        salvaPartitaDB()
         sequenzaComputer = emptyList()
         sequenzaGiocatore = emptyList()
 

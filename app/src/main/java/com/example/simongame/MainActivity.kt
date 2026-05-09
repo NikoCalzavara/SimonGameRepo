@@ -12,17 +12,34 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.room.Room
+import com.example.simongame.data.AppDatabase
 import com.example.simongame.ui.theme.SimonGameTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Creo un'istanza del DataBase
+        val db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "simonGameDb"
+        ).build()
+
+        val dao = db.partitaDao()
+
         enableEdgeToEdge()
         setContent {
             SimonGameTheme {
+
+                val gameViewModel: GameViewModel = viewModel() // Creo il ViewModel
+                gameViewModel.dao = dao // Associo immediatamente il dao al ViewModel prima che venga utilizzato per evitare errori
+
                 var partite by rememberSaveable { mutableStateOf( listOf<List<String>>()) } // Utilizzo una lista di liste di stringhe per memorizzare le partite
 
                 // Implementazione della navigazione tra schermate
