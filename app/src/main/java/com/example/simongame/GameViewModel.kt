@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.simongame.data.Partita
 import com.example.simongame.data.PartitaDao
 import kotlinx.coroutines.launch
 
@@ -50,23 +51,15 @@ class GameViewModel(private val dao: PartitaDao) : ViewModel() {
     private fun riproduciSequenzaComputer(){ // Riproduzione di un colore alla volta
         viewModelScope.launch { // "Launch" fa partire l'operazione in background
             for (colore in sequenzaComputer){
-
                 while (isInPausa){
                     kotlinx.coroutines.delay(100) // Ogni 100 millisecondi controlla lo stato della variabile isInPausa. Se è True NON procede
                 }
-
                 coloreAttivo = colore // "Accendo" il colore
-
                 kotlinx.coroutines.delay(500) // Tengo acceso il colore per mezzo secondo
-
                 coloreAttivo = null // "Spengo" il colore
-
                 kotlinx.coroutines.delay(250) // Pausa prima di procedere con il prossimo colore
-
             }
-
             isTurnoComputer = false // Finito di suonare la sequenza tocca al giocatore
-
         }
     }
 
@@ -74,11 +67,51 @@ class GameViewModel(private val dao: PartitaDao) : ViewModel() {
         isInPausa = !isInPausa // Inverte il valore (se era false diventa true, e viceversa)
     }
 
-    fun colorePremuto(coloreCliccato: String) { // Chiamata quando l'utente clicca un riquadro
+    fun colorePremuto(coloreCliccato: String) { // Chiamata ogni volta che l'utente clicca un riquadro
+        if( !partitaInCorso || isTurnoComputer) return // Ignoro il click se non ho avviato la partita o è il turno del computer
+
+        sequenzaGiocatore += coloreCliccato
+
+        val index = sequenzaGiocatore.size - 1 // Controllo l'ultimo tasto cliccato
+
+        if( sequenzaGiocatore[index] == sequenzaComputer[index] ){ // Se l'utente ha premuto il colore corretto
+            if( sequenzaGiocatore.size == sequenzaComputer.size ){ // Condizione in cui torna a essere il turno del computer
+                sequenzaComputer += coloriDisponibili.random()
+                isTurnoComputer = true
+                sequenzaGiocatore = emptyList()
+                riproduciSequenzaComputer()
+            }
+        } else { // Il giocatore ha sbagliato colore
+            partitaInCorso = false
+            salvaPartitaDB()
+        }
+    }
+
+    private fun salvaPartitaDB(){
+        val lunghezzaCorretta = maxOf(0, sequenzaGiocatore.size - 1 ) // -1 perchè se ho premuto 3 colori e ho sbagliato il terzo, quelli corretti sono 2
+        val sequenzaStringa = sequenzaGiocatore.joinToString(", ")
+        val partitaDaSalvare = Partita(
+            lunghezza = lunghezzaCorretta,
+            sequenza = sequenzaStringa,
+        )
+        // Lancio la coroutine per salvare i dati sfruttando il DAO
+        viewModelScope.launch{
+            dao.inserisciPartita(partitaDaSalvare)
+        }
     }
 
     fun finePartita() {
         partitaInCorso = false
+
+        if( sequenzaComputer.size == 1 ){
+            sequenzaComputer = emptyList()
+            sequenzaGiocatore = emptyList()
+            return // Esco senza salvare
+        }
+
+        sequenzaGiocatore += "X" // Aggiungo un carattere fittizio
+        sequenzaComputer = emptyList()
+        sequenzaGiocatore = emptyList()
 
     }
 }
