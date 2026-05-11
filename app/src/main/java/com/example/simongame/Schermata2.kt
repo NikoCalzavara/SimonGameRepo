@@ -1,6 +1,7 @@
 package com.example.simongame
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,63 +17,78 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import com.example.simongame.data.Partita
+import com.example.simongame.data.PartitaDao
 
 @Composable
-fun Schermata2(modifier : Modifier = Modifier, partite: List<List<String>>) {
-    Column( modifier = modifier
-        .fillMaxSize()
-        .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Text( // Testo visualizzato in alto, al centro
-            text = stringResource(R.string.partite_concluse),
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-        // Utilizzo una LazyColumn alla quale passo la lista di partite. La LazyColumn eseguirà il blocco di codice specificato per ogni singolo elemento della lista "partite"
-        LazyColumn( modifier = Modifier.fillMaxSize()) {
-            items(partite){ partita -> // Ogni singola partita è a sua volta una lista
-                // Ora specifico il codice da eseguire per ogni elemento della lista di partite
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp), // Spazio tra un elemento e l'altro della lista
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+fun Schermata2(modifier : Modifier = Modifier, navController: NavController, dao: PartitaDao) {
+
+    Box( // Il Box mi permette di posizionare degli oggetti uno sopra l'altro. Mi serve per posizionare il FloatingActionButton sopra la lista delle partite
+        modifier = modifier.fillMaxSize()
+    ) {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text( // Testo visualizzato in alto, al centro
+                text = stringResource(R.string.partite_concluse),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            // Utilizzo una LazyColumn alla quale passo la lista di partite. La LazyColumn eseguirà il blocco di codice specificato per ogni singolo elemento della lista "partite"
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                val partite = dao.getTuttePartite()
+                items(partite) { partita -> // Ogni oggetto è di tipo Partita
+                    // Ora specifico il codice da eseguire per ogni elemento della lista di partite
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp), // Spazio tra un elemento e l'altro della lista
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                    Text( // Testo che sta a sinistra e mostra il numero di rettangoli premuti
-                        modifier = modifier.padding(end = 12.dp), // Per spaziare il numero dalla stringa con la sequenza di tasti
-                        text = "${partita.size}",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 24.sp
-                    )
-                    Text( // Testo che sta a destra e mostra la sequenza di colori premuti
-                        text = if (partita.isEmpty()) stringResource(R.string.nessun_colore) else partita.joinToString(", "),
-                        // Ora devo far si che se la sequenza è troppo lunga essa venga troncata
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis // In caso di troncamento aggiunge "..." alla fine della sequenza
-                    )
+                        Text( // Testo che sta a sinistra e mostra il numero di rettangoli premuti
+                            modifier = modifier.padding(end = 12.dp), // Per spaziare il numero dalla stringa con la sequenza di tasti
+                            text = "${partita.lunghezza}", // Ho gia il parametro lunghezza salvato nell'oggetto Partita
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 24.sp
+                        )
+                        Text( // Testo che sta a destra e mostra la sequenza di colori premuti
+                            text = partita.sequenza, // TODO: ricordarsi di colorare la stringa a partire da dove è avvenuto l'errore
+                            // Ora devo far si che se la sequenza è troppo lunga essa venga troncata
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis // In caso di troncamento aggiunge "..." alla fine della sequenza
+                        )
+                    }
                 }
             }
         }
+
+        FloatingActionButton(
+            onClick = {navController.navigate("gioco")},
+            modifier = Modifier
+                .align(Alignment.BottomEnd) // Allineo il pulsante in basso a destra
+                .padding(16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.PlayArrow,
+                "Nuova partita"
+            )
+        }
+
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun Schermata2Preview() {
-    val dati = listOf(
-        listOf("R", "G", "B"),
-        listOf("R", "G"),
-        listOf("B"),
-        // Sequenza lunga per testare il troncamento e lo spazio tra counter e sequenza
-        listOf("R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B", "R", "G", "B")
-    )
-
-    Schermata2(
-        // Devo passare una lista di liste
-        partite = dati
-    )
 }

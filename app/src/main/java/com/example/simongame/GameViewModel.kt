@@ -52,7 +52,7 @@ class GameViewModel : ViewModel() {
 
     private fun riproduciSequenzaComputer(){ // Riproduzione di un colore alla volta
         viewModelScope.launch { // "Launch" fa partire l'operazione in background
-            for (colore in sequenzaComputer){
+            for (colore in sequenzaComputer){ // Itero su ogni elemento della sequenza generata
                 while (isInPausa){
                     kotlinx.coroutines.delay(100) // Ogni 100 millisecondi controlla lo stato della variabile isInPausa. Se è True NON procede
                 }
@@ -78,7 +78,7 @@ class GameViewModel : ViewModel() {
 
         if( sequenzaGiocatore[index] == sequenzaComputer[index] ){ // Se l'utente ha premuto il colore corretto
             if( sequenzaGiocatore.size == sequenzaComputer.size ){ // Condizione in cui torna a essere il turno del computer
-                sequenzaComputer += coloriDisponibili.random()
+                sequenzaComputer += coloriDisponibili.random() // Aggiungo un colore solo se l'utente preme la sequenza corretta
                 isTurnoComputer = true
                 sequenzaGiocatore = emptyList()
                 riproduciSequenzaComputer()
@@ -89,14 +89,14 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    private fun salvaPartitaDB(){
+    private fun salvaPartitaDB(){ // Funzione che "prepara" tutti i dati da salvare nel database e li salva
         val lunghezzaCorretta = maxOf(0, sequenzaGiocatore.size - 1 ) // -1 perchè se ho premuto 3 colori e ho sbagliato il terzo, quelli corretti sono 2
         val sequenzaStringa = sequenzaGiocatore.joinToString(", ")
         val partitaDaSalvare = Partita(
             lunghezza = lunghezzaCorretta,
             sequenza = sequenzaStringa,
         )
-        // Lancio la coroutine per salvare i dati sfruttando il DAO
+        // Lancio la coroutine per salvare i dati nel database sfruttando il DAO
         viewModelScope.launch{
             dao.inserisciPartita(partitaDaSalvare)
         }

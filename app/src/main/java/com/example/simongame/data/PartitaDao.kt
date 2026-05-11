@@ -8,7 +8,8 @@ import androidx.room.Query
 interface PartitaDao {
 
     @Query("SELECT * FROM tabella_partite")
-    fun getTuttePartite(): List<Partita> // Query che ritorna la lista di tutte le partite salvate nel database
+    fun getTuttePartite(): List<Partita> // Query che ritorna la lista di tutte le partite salvate nel database.
+    // In particolare ritorna una lista di oggetti di tipo Partita
 
     @Insert
     suspend fun inserisciPartita(partita: Partita) // Inserimento di una singola partita nel database

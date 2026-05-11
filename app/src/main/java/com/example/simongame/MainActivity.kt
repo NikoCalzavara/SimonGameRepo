@@ -40,8 +40,6 @@ class MainActivity : ComponentActivity() {
                 val gameViewModel: GameViewModel = viewModel() // Creo il ViewModel
                 gameViewModel.dao = dao // Associo immediatamente il dao al ViewModel prima che venga utilizzato per evitare errori
 
-                var partite by rememberSaveable { mutableStateOf( listOf<List<String>>()) } // Utilizzo una lista di liste di stringhe per memorizzare le partite
-
                 // Implementazione della navigazione tra schermate
                 val navigationController = rememberNavController()
 
