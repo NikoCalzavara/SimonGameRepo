@@ -78,7 +78,7 @@ fun Schermata2(modifier : Modifier = Modifier, navController: NavController, dao
             }
         }
 
-        FloatingActionButton(
+        FloatingActionButton( // Pulsante "fluttuante" collocato in basso a destra che si sovrappone alla lista delle partite
             onClick = {navController.navigate("gioco")},
             modifier = Modifier
                 .align(Alignment.BottomEnd) // Allineo il pulsante in basso a destra

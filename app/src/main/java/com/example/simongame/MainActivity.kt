@@ -45,20 +45,26 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold( modifier = Modifier.fillMaxSize()){ innerPadding ->
                     NavHost(
-                        navController = navigationController, startDestination = "schermata1",
+                        navController = navigationController,
+                        startDestination = "schermata2",
                         modifier = Modifier.padding(innerPadding)
                     ){ // Definizione del grafo di navigazione
-                        composable("schermata1"){
+                        composable("schermata2"){
+                            Schermata2( // Passo il navigationController e il dao
+                                navController = navigationController,
+                                dao = dao
+                            )
+                        }
+                        composable("gioco"){
                             // Alla Schermata1 passo una funzione lambda che verrà chiamata quando verrà premuto il pulsante "fine partita"
                             // La lamba RICEVE una lista e la salva in "partite", inoltre ESEGUE l'istruzione per cambiare schermata
-                            Schermata1(onFinePartitaClicked = { sequenza ->
-                                partite = partite + listOf(sequenza)
-                                navigationController.navigate("schermata2")
-                            } )
+                            Schermata1(
+                                navController = navigationController,
+                                viewModel = gameViewModel // Devo passare il viewModel in quanto Schermata1 si occupa solo di fare da "Tramite" tra l'utente e i dati. I dati vengono gestiti dal ViewModel
+                            )
                         }
-                        composable("schermata2"){
-                            Schermata2(partite = partite) // Passo alla schermata 2 la lista di partite che deve mostrare
-                        }
+                        //TODO: aggiungere la schermata "dettaglio partita"
+
                     }
                 }
             }

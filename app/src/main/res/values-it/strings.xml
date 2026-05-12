@@ -5,4 +5,7 @@
     <string name="nessun_colore">Nessun colore</string>
     <string name="cancella">Cancella</string>
     <string name="fine_partita">Fine partita</string>
+    <string name="avvia_partita">Avvia partita</string>
+    <string name="riprendi">Riprendi</string>
+    <string name="pause">Pausa</string>
 </resources>

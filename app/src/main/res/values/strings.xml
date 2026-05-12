@@ -11,4 +11,7 @@
     <string name="premi_un_colore">Press any color</string>
     <string name="partite_concluse">Ended games</string>
     <string name="nessun_colore">No color</string>
+    <string name="avvia_partita">Start Game</string>
+    <string name="riprendi">Resume</string>
+    <string name="pause">Pause</string>
 </resources>

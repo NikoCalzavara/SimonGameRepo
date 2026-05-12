@@ -29,16 +29,20 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 
 @Composable
 // Obbligatorio passare una funzione lambda che verrà chiamata quando verrà premuto il pulsante "fine partita"
 // Il Modifier invece ha un valore di default
-fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String>) -> Unit) {
+fun Schermata1(modifier: Modifier = Modifier, navController : NavController, viewModel: GameViewModel) {
     val orientation = LocalConfiguration.current.orientation
+
+    // Leggo lo stato dal ViewModel
+    val sequenzaGiocatore = viewModel.sequenzaGiocatore
+    val coloreAttivo = viewModel.coloreAttivo
+
     // Lo stato scende "verso il basso" come parametro
     // Gli eventi, invece, salgono verso l'alto come funzioni lambda. Nel nostro caso l'evento parte da Riquadro e deve arrivare a Schermata1
-
-    var sequence by rememberSaveable { mutableStateOf(listOf<String>()) } // Utilizzo una List così posso sfruttare direttamente il metodo per convertirla in stringa e non dover formattare il tutto usando if/else
 
     // Layout verticale
     if(orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -50,13 +54,14 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
         ){
             Matrice( // Matrice 3x2
                 modifier = Modifier.weight(3f),
-                onColorClick = { coloreCliccato -> sequence = sequence + coloreCliccato } // coloreCliccato rappresenta la stringa inviata dal riquadro
+                coloreAttivo = coloreAttivo, // Passo alla matrice il colore che sta "suonando" il ViewModel
+                onColorClick = { coloreCliccato -> viewModel.colorePremuto(coloreCliccato) } // coloreCliccato rappresenta la stringa inviata dal riquadro
             )
 
             Text(modifier = modifier // Testo non editabile
                 .padding(vertical = 24.dp), // Aggiungo padding solo in verticale, non ai lati
                 // Utilizzo il metodo joinToString in quanto mi permette di convertire la lista in stringa e scegliere il separatore che preferisco
-                text = if (sequence.isEmpty()) stringResource(R.string.premi_un_colore) else sequence.joinToString(", "),
+                text = if (sequenzaGiocatore.isEmpty()) stringResource(R.string.premi_un_colore) else sequenzaGiocatore.joinToString(", "),
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
                 fontSize = 30.sp,
@@ -64,12 +69,11 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
             )
 
             // I due bottoni
-            Pulsanti(modifier = Modifier.fillMaxWidth(),
-                onFinePartitaClicked = {
-                    onFinePartitaClicked(sequence) // Invio la lista al MainActivity
-                    sequence = emptyList() // Svuoto la sequenza attuale
-                },
-                onCancellaClicked = { sequence = emptyList() } )
+            Pulsanti(
+                modifier = Modifier.fillMaxWidth(),
+                navController = navController,
+                viewModel = viewModel
+            )
         }
     }
 
@@ -84,7 +88,8 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
             // Matrice 3x2
             Matrice(
                 modifier = Modifier.weight(3f),
-                onColorClick = { coloreCliccato -> sequence = sequence + coloreCliccato } // coloreCliccato rappresenta la stringa inviata dal riquadro
+                coloreAttivo = coloreAttivo,
+                onColorClick = { coloreCliccato -> viewModel.colorePremuto(coloreCliccato) } // coloreCliccato rappresenta la stringa inviata dal riquadro
             )
             // Colonna con dentro testo e pulsanti
             Column(
@@ -99,17 +104,16 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
                     .padding(vertical = 12.dp),
                     maxLines = 5, // Supporto 2 righe in più rispetto al layout verticale
                     overflow = TextOverflow.Ellipsis,
-                    text = if (sequence.isEmpty()) stringResource(R.string.premi_un_colore) else sequence.joinToString(", "),
+                    text = if (sequenzaGiocatore.isEmpty()) stringResource(R.string.premi_un_colore) else sequenzaGiocatore.joinToString(", "),
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
                 )
                 // I due bottoni
-                Pulsanti(modifier = Modifier.fillMaxWidth(),
-                    onFinePartitaClicked = {
-                        onFinePartitaClicked(sequence) // Invio la lista al MainActivity
-                        sequence = emptyList() // Svuoto la sequenza attuale
-                    },
-                    onCancellaClicked = { sequence = emptyList() })
+                Pulsanti(
+                    modifier = Modifier.fillMaxWidth(),
+                    navController = navController,
+                    viewModel = viewModel
+                )
             }
 
         }
@@ -117,7 +121,7 @@ fun Schermata1(modifier: Modifier = Modifier, onFinePartitaClicked: (List<String
 }
 
 @Composable
-fun Matrice(modifier: Modifier = Modifier, onColorClick: (String) -> Unit){
+fun Matrice(modifier: Modifier = Modifier, coloreAttivo: String?, onColorClick: (String) -> Unit){ // Ora passo alla matrice anche il colore che deve essere attivo, ma che può anche essere null
     // Per costruire la matrice 3x2 utilizzo una Column con 3 Row al suo interno
     Column(modifier = modifier){
         Row( modifier = Modifier.weight(1f)){
@@ -125,22 +129,23 @@ fun Matrice(modifier: Modifier = Modifier, onColorClick: (String) -> Unit){
             val testoRosso = stringResource(R.string.r)
             val testoVerde = stringResource(R.string.g)
 
-            Riquadro(Color.Red, { onColorClick(testoRosso) }, Modifier.weight(1f))
-            Riquadro(Color.Green, { onColorClick(testoVerde) }, Modifier.weight(1f))
+            // Il parametro "isIlluminato" è true solo se la lettera del colore attivo corrisponde a quella del riquadro
+            Riquadro(Color.Red, coloreAttivo == testoRosso, { onColorClick(testoRosso) }, Modifier.weight(1f))
+            Riquadro(Color.Green, coloreAttivo == testoVerde,{ onColorClick(testoVerde) }, Modifier.weight(1f))
         }
         Row( modifier = Modifier.weight(1f)){
             val testoBlu = stringResource(R.string.b)
             val testoMagenta = stringResource(R.string.m)
 
-            Riquadro(Color.Blue, { onColorClick(testoBlu) }, Modifier.weight(1f))
-            Riquadro(Color.Magenta, { onColorClick(testoMagenta) }, Modifier.weight(1f))
+            Riquadro(Color.Blue, coloreAttivo == testoBlu,{ onColorClick(testoBlu) }, Modifier.weight(1f))
+            Riquadro(Color.Magenta, coloreAttivo == testoMagenta,{ onColorClick(testoMagenta) }, Modifier.weight(1f))
         }
         Row( modifier = Modifier.weight(1f)){
             val testoGiallo = stringResource(R.string.y)
             val testoCiano = stringResource(R.string.c)
 
-            Riquadro(Color.Yellow, { onColorClick(testoGiallo) }, Modifier.weight(1f))
-            Riquadro(Color.Cyan,  { onColorClick(testoCiano) }, Modifier.weight(1f))
+            Riquadro(Color.Yellow, coloreAttivo == testoGiallo,{ onColorClick(testoGiallo) }, Modifier.weight(1f))
+            Riquadro(Color.Cyan,  coloreAttivo == testoCiano,{ onColorClick(testoCiano) }, Modifier.weight(1f))
         }
     }
 }
@@ -150,15 +155,18 @@ fun Riquadro(
     // Funzione compose che costruisce un singolo riquadro secondo i parametri che gli vengono passati
     // Tale funzione viene chiamata sei volte dalla funzione Matrice, per costruire tutti i Box
     coloreRiquadro: Color,
+    isIlluminato: Boolean, // Parametro per capire se deve essere illuminato o no
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val coloreMostrato = if (isIlluminato) coloreRiquadro else coloreRiquadro.copy(alpha = 0.3f) // Uso il colore pieno se è illuminato, altrimenti il riquadro è semitrasparente
+
     Box(
         modifier = modifier
             .fillMaxSize()
             .padding(8.dp) // Padding per spaziare i singoli Box all'interno della matrice
             .background(
-                color = coloreRiquadro,
+                color = coloreMostrato,
                 shape = RoundedCornerShape(16.dp) // Arrotonda gli angoli dei Box
             )
             .clickable { onClick() },
@@ -167,22 +175,38 @@ fun Riquadro(
 }
 
 @Composable
-fun Pulsanti(modifier : Modifier = Modifier, onFinePartitaClicked: () -> Unit, onCancellaClicked: () -> Unit) {
-    Row(
+fun Pulsanti(modifier : Modifier = Modifier, navController: NavController, viewModel: GameViewModel) {
+    Column( // Nella prima riga contiene due pulsanti, poi sotto il terzo pulsante centrato
         modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceEvenly
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Button(onClick = { onCancellaClicked() }) {
-            Text(text = stringResource(R.string.cancella))
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Button( // Pulsante pausa
+                onClick = { viewModel.pausaRiprendi() }
+            ) {
+                Text( if (viewModel.isInPausa) stringResource(R.string.riprendi) else stringResource(R.string.pause))
+            }
+            Button( // Pulsante fine partita
+                onClick = {
+                    if (viewModel.partitaInCorso){
+                        viewModel.finePartita()
+                    }
+                    navController.popBackStack() // Torna alla schermata precedente
+                }
+            ){
+                Text( if (viewModel.partitaInCorso) "End game" else "Back")
+            }
         }
-        Button(onClick = { onFinePartitaClicked() }) {
-            Text(text = stringResource(R.string.fine_partita))
+
+        Button( // Pulsante avvia partita
+            onClick = { viewModel.avviaPartita() },
+            enabled = !viewModel.partitaInCorso // Rendo il bottone visibile solo se non c'è nessuna partita in corso
+        ) {
+            Text(text = stringResource(R.string.avvia_partita))
         }
     }
-}
-
-@Preview (showBackground = true)
-@Composable
-fun Schermata1Preview() {
-    Schermata1(onFinePartitaClicked = {})
 }
