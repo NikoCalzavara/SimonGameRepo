@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +34,8 @@ import com.example.simongame.data.PartitaDao
 
 @Composable
 fun Schermata2(modifier : Modifier = Modifier, navController: NavController, dao: PartitaDao) {
+
+    val partite by dao.getTuttePartite().collectAsState(initial = emptyList()) // Si collega al database in background e aggiorna la lista delle partite ogni volta che salvo una nuova partita
 
     Box( // Il Box mi permette di posizionare degli oggetti uno sopra l'altro. Mi serve per posizionare il FloatingActionButton sopra la lista delle partite
         modifier = modifier.fillMaxSize()
@@ -51,7 +54,6 @@ fun Schermata2(modifier : Modifier = Modifier, navController: NavController, dao
             )
             // Utilizzo una LazyColumn alla quale passo la lista di partite. La LazyColumn eseguirà il blocco di codice specificato per ogni singolo elemento della lista "partite"
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                val partite = dao.getTuttePartite()
                 items(partite) { partita -> // Ogni oggetto è di tipo Partita
                     // Ora specifico il codice da eseguire per ogni elemento della lista di partite
                     Row(

@@ -61,7 +61,7 @@ fun Schermata1(modifier: Modifier = Modifier, navController : NavController, vie
             Text(modifier = modifier // Testo non editabile
                 .padding(vertical = 24.dp), // Aggiungo padding solo in verticale, non ai lati
                 // Utilizzo il metodo joinToString in quanto mi permette di convertire la lista in stringa e scegliere il separatore che preferisco
-                text = if (sequenzaGiocatore.isEmpty()) stringResource(R.string.premi_un_colore) else sequenzaGiocatore.joinToString(", "),
+                text = if (!sequenzaGiocatore.isEmpty()) sequenzaGiocatore.joinToString(", ") else "",
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
                 fontSize = 30.sp,
@@ -104,7 +104,7 @@ fun Schermata1(modifier: Modifier = Modifier, navController : NavController, vie
                     .padding(vertical = 12.dp),
                     maxLines = 5, // Supporto 2 righe in più rispetto al layout verticale
                     overflow = TextOverflow.Ellipsis,
-                    text = if (sequenzaGiocatore.isEmpty()) stringResource(R.string.premi_un_colore) else sequenzaGiocatore.joinToString(", "),
+                    text = if (!sequenzaGiocatore.isEmpty()) sequenzaGiocatore.joinToString(", ") else "",
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
                 )

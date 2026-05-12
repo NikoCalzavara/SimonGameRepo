@@ -3,12 +3,14 @@ package com.example.simongame.data
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PartitaDao {
 
     @Query("SELECT * FROM tabella_partite")
-    fun getTuttePartite(): List<Partita> // Query che ritorna la lista di tutte le partite salvate nel database.
+    fun getTuttePartite(): Flow<List<Partita>> // Query che ritorna la lista di tutte le partite salvate nel database.
+    // Flow permette di non bloccare l'app ogni volta che si esegue la funzione, inoltre l'app aggiornerà la UI automaticamente ogni volta che finisce una partita
     // In particolare ritorna una lista di oggetti di tipo Partita
 
     @Insert
