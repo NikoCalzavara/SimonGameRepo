@@ -8,4 +8,5 @@
     <string name="avvia_partita">Avvia partita</string>
     <string name="riprendi">Riprendi</string>
     <string name="pause">Pausa</string>
+    <string name="press_the_start_button">Premi il pulsante avvia</string>
 </resources>

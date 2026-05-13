@@ -61,8 +61,9 @@ fun Schermata1(modifier: Modifier = Modifier, navController : NavController, vie
             Text(modifier = modifier // Testo non editabile
                 .padding(vertical = 24.dp), // Aggiungo padding solo in verticale, non ai lati
                 // Utilizzo il metodo joinToString in quanto mi permette di convertire la lista in stringa e scegliere il separatore che preferisco
-                text = if (!sequenzaGiocatore.isEmpty()) sequenzaGiocatore.joinToString(", ") else "",
-                maxLines = 3,
+                text = if (sequenzaGiocatore.isEmpty() && !viewModel.partitaInCorso) stringResource(R.string.press_the_start_button) else sequenzaGiocatore.joinToString(", "),
+                maxLines = 2,
+                minLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
@@ -102,9 +103,9 @@ fun Schermata1(modifier: Modifier = Modifier, navController : NavController, vie
                 Text(modifier = modifier
                     .padding(horizontal = 24.dp)
                     .padding(vertical = 12.dp),
-                    maxLines = 5, // Supporto 2 righe in più rispetto al layout verticale
+                    maxLines = 4, // Supporto 2 righe in più rispetto al layout verticale
                     overflow = TextOverflow.Ellipsis,
-                    text = if (!sequenzaGiocatore.isEmpty()) sequenzaGiocatore.joinToString(", ") else "",
+                    text = if (sequenzaGiocatore.isEmpty() && !viewModel.partitaInCorso) stringResource(R.string.press_the_start_button) else sequenzaGiocatore.joinToString(", "),
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -186,7 +187,8 @@ fun Pulsanti(modifier : Modifier = Modifier, navController: NavController, viewM
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             Button( // Pulsante pausa
-                onClick = { viewModel.pausaRiprendi() }
+                onClick = { viewModel.pausaRiprendi() },
+                enabled = viewModel.isTurnoComputer // Il pulsante pausa dev'essere attivo solamente quando tocca al computer
             ) {
                 Text( if (viewModel.isInPausa) stringResource(R.string.riprendi) else stringResource(R.string.pause))
             }

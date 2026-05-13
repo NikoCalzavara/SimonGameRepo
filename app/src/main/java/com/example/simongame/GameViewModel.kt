@@ -53,6 +53,7 @@ class GameViewModel : ViewModel() {
     private fun riproduciSequenzaComputer(){ // Riproduzione di un colore alla volta
         viewModelScope.launch { // "Launch" fa partire l'operazione in background
             kotlinx.coroutines.delay(1000)
+            sequenzaGiocatore = emptyList()
             for (colore in sequenzaComputer){ // Itero su ogni elemento della sequenza generata
                 while (isInPausa){
                     kotlinx.coroutines.delay(100) // Ogni 100 millisecondi controlla lo stato della variabile isInPausa. Se è True NON procede
@@ -87,7 +88,6 @@ class GameViewModel : ViewModel() {
             if( sequenzaGiocatore.size == sequenzaComputer.size ){ // Condizione in cui torna a essere il turno del computer
                 sequenzaComputer += coloriDisponibili.random() // Aggiungo un colore solo se l'utente preme la sequenza corretta
                 isTurnoComputer = true
-                sequenzaGiocatore = emptyList()
                 riproduciSequenzaComputer()
             }
         } else { // Il giocatore ha sbagliato colore

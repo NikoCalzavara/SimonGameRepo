@@ -14,4 +14,5 @@
     <string name="avvia_partita">Start Game</string>
     <string name="riprendi">Resume</string>
     <string name="pause">Pause</string>
+    <string name="press_the_start_button">Press the start button</string>
 </resources>
