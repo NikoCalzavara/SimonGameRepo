@@ -1,8 +1,11 @@
 package com.example.simongame
 
 import android.content.res.Configuration
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +24,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -162,13 +166,29 @@ fun Riquadro(
 ) {
     val coloreMostrato = if (isIlluminato) coloreRiquadro else coloreRiquadro.copy(alpha = 0.3f) // Uso il colore pieno se è illuminato, altrimenti il riquadro è semitrasparente
 
+    val scala by animateFloatAsState(
+        targetValue = if (isIlluminato) 1.05f else 1.0f, // Calcola un'animazione tra la dimensione 1.0f e 1.05f
+        label = "animazione_scala"
+    )
+
+    val isTemaScuro = isSystemInDarkTheme() // Restituisce true se il dispositivo è in modalità scura
+
+    val coloreBordo = if(isTemaScuro) Color.White else Color.Black // Scelgo il colore del bordo del Box in base al tema del dispositivo
+
     Box(
         modifier = modifier
             .fillMaxSize()
+            .scale(scala)
             .padding(8.dp) // Padding per spaziare i singoli Box all'interno della matrice
             .background(
                 color = coloreMostrato,
                 shape = RoundedCornerShape(16.dp) // Arrotonda gli angoli dei Box
+            )
+            .border(
+                width = if (isIlluminato) 4.dp else 0.dp,
+                color = if (isIlluminato) coloreBordo // Se ho il tema chiaro uso un bordo scuro
+                        else Color.Transparent,
+                shape = RoundedCornerShape(16.dp)
             )
             .clickable { onClick() },
         contentAlignment = Alignment.Center // Centra tutto ciò che posiziono nel Box
