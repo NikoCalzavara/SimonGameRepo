@@ -13,5 +13,8 @@ data class Partita(
     val lunghezza: Int,
 
     @ColumnInfo("sequenza")
-    val sequenza: String // Devo fare la conversione della partita da lista a stringa in quanto SQLite non riesce a gestire le liste
+    val sequenza: String, // Devo fare la conversione della partita da lista a stringa in quanto SQLite non riesce a gestire le liste
+
+    @ColumnInfo("errore")
+    val indiceErrore: Int // Mi serve per sapere da dove colorare di rosso le partite mostrate nella lista
 )

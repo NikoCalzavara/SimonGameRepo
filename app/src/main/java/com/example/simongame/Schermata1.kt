@@ -187,7 +187,7 @@ fun Riquadro(
             .border(
                 width = if (isIlluminato) 4.dp else 0.dp,
                 color = if (isIlluminato) coloreBordo // Se ho il tema chiaro uso un bordo scuro
-                        else Color.Transparent,
+                else Color.Transparent,
                 shape = RoundedCornerShape(16.dp)
             )
             .clickable { onClick() },
@@ -220,7 +220,7 @@ fun Pulsanti(modifier : Modifier = Modifier, navController: NavController, viewM
                     navController.popBackStack() // Torna alla schermata precedente
                 }
             ){
-                Text( if (viewModel.partitaInCorso) "End game" else "Back")
+                Text( if (viewModel.partitaInCorso) stringResource(R.string.fine_partita) else stringResource(R.string.back))
             }
         }
 

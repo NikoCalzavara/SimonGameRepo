@@ -15,4 +15,5 @@
     <string name="riprendi">Resume</string>
     <string name="pause">Pause</string>
     <string name="press_the_start_button">Press the start button</string>
+    <string name="back">Back</string>
 </resources>

@@ -26,7 +26,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import com.example.simongame.data.Partita
@@ -70,7 +74,7 @@ fun Schermata2(modifier : Modifier = Modifier, navController: NavController, dao
                             fontSize = 24.sp
                         )
                         Text( // Testo che sta a destra e mostra la sequenza di colori premuti
-                            text = partita.sequenza, // TODO: ricordarsi di colorare la stringa a partire da dove è avvenuto l'errore
+                            text = coloraSequenza(partita.sequenza, partita.indiceErrore),
                             // Ora devo far si che se la sequenza è troppo lunga essa venga troncata
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis // In caso di troncamento aggiunge "..." alla fine della sequenza
@@ -92,5 +96,23 @@ fun Schermata2(modifier : Modifier = Modifier, navController: NavController, dao
             )
         }
 
+    }
+}
+
+@Composable // Funzione per colorare la stringa mostrata a destra
+fun coloraSequenza(sequenza: String, indiceErrore: Int): androidx.compose.ui.text.AnnotatedString { // AnnotatedString serve per impostare diversi stili all'interno dello stesso Text
+    if (sequenza.isEmpty()) return buildAnnotatedString { "" }
+    val elementi = sequenza.split(", ") // Split mi ritorna una lista
+
+    val parteCorretta = elementi.take(indiceErrore).joinToString(", ") // Prende gli elementi FINO all'indice d'errore
+    val parteSbagliata = elementi.drop(indiceErrore).joinToString(", ") // Prende gli elementi DOPO l'indice d'errore
+
+    return buildAnnotatedString {
+        append(parteCorretta) // La parte corretta non ha bisogno di alcuna modifica
+        if(parteSbagliata.isNotEmpty()){ // La devo colorare di rosso
+            withStyle(style = SpanStyle(color = Color.Red, fontWeight = FontWeight.Bold)) {
+                append(parteSbagliata)
+            }
+        }
     }
 }

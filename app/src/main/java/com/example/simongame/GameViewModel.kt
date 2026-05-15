@@ -98,10 +98,12 @@ class GameViewModel : ViewModel() {
 
     private fun salvaPartitaDB(){ // Funzione che "prepara" tutti i dati da salvare nel database e li salva
         val lunghezzaCorretta = maxOf(0, sequenzaComputer.size - 1 ) // -1 perchè se ho premuto 3 colori e ho sbagliato il terzo, quelli corretti sono 2
-        val sequenzaStringa = sequenzaGiocatore.joinToString(", ")
+        val sequenzaStringa = sequenzaComputer.joinToString(", ")
+        val indiceSbagliato = maxOf(0, sequenzaGiocatore.size - 1)
         val partitaDaSalvare = Partita(
             lunghezza = lunghezzaCorretta,
             sequenza = sequenzaStringa,
+            indiceErrore = indiceSbagliato
         )
         // Lancio la coroutine per salvare i dati nel database sfruttando il DAO
         viewModelScope.launch{
@@ -118,7 +120,7 @@ class GameViewModel : ViewModel() {
             return // Esco senza salvare dopo aver svuotato le due liste
         }
 
-        sequenzaGiocatore += "X" // Aggiungo un carattere fittizio
+        sequenzaGiocatore += "X" // Aggiungo un carattere fittizio quando l'utente preme "Fine partita"
         salvaPartitaDB()
         sequenzaComputer = emptyList()
         sequenzaGiocatore = emptyList()
