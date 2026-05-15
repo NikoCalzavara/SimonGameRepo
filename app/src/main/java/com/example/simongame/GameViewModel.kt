@@ -97,7 +97,7 @@ class GameViewModel : ViewModel() {
     }
 
     private fun salvaPartitaDB(){ // Funzione che "prepara" tutti i dati da salvare nel database e li salva
-        val lunghezzaCorretta = maxOf(0, sequenzaGiocatore.size - 1 ) // -1 perchè se ho premuto 3 colori e ho sbagliato il terzo, quelli corretti sono 2
+        val lunghezzaCorretta = maxOf(0, sequenzaComputer.size - 1 ) // -1 perchè se ho premuto 3 colori e ho sbagliato il terzo, quelli corretti sono 2
         val sequenzaStringa = sequenzaGiocatore.joinToString(", ")
         val partitaDaSalvare = Partita(
             lunghezza = lunghezzaCorretta,
@@ -115,7 +115,7 @@ class GameViewModel : ViewModel() {
         if( sequenzaComputer.size == 1 ){
             sequenzaComputer = emptyList()
             sequenzaGiocatore = emptyList()
-            return // Esco senza salvare
+            return // Esco senza salvare dopo aver svuotato le due liste
         }
 
         sequenzaGiocatore += "X" // Aggiungo un carattere fittizio
