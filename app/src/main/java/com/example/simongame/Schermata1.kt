@@ -65,7 +65,7 @@ fun Schermata1(modifier: Modifier = Modifier, navController : NavController, vie
             Text(modifier = modifier // Testo non editabile
                 .padding(vertical = 24.dp), // Aggiungo padding solo in verticale, non ai lati
                 // Utilizzo il metodo joinToString in quanto mi permette di convertire la lista in stringa e scegliere il separatore che preferisco
-                text = if (sequenzaGiocatore.isEmpty() && !viewModel.partitaInCorso) stringResource(R.string.press_the_start_button) else sequenzaGiocatore.joinToString(", "),
+                text = if (!viewModel.partitaInCorso) stringResource(R.string.press_the_start_button) else sequenzaGiocatore.joinToString(", "),
                 maxLines = 2,
                 minLines = 2,
                 overflow = TextOverflow.Ellipsis,
@@ -88,7 +88,7 @@ fun Schermata1(modifier: Modifier = Modifier, navController : NavController, vie
             .fillMaxSize()
             .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ){
             // Matrice 3x2
             Matrice(
@@ -107,9 +107,10 @@ fun Schermata1(modifier: Modifier = Modifier, navController : NavController, vie
                 Text(modifier = modifier
                     .padding(horizontal = 24.dp)
                     .padding(vertical = 12.dp),
+                    minLines = 4,
                     maxLines = 4, // Supporto 2 righe in più rispetto al layout verticale
                     overflow = TextOverflow.Ellipsis,
-                    text = if (sequenzaGiocatore.isEmpty() && !viewModel.partitaInCorso) stringResource(R.string.press_the_start_button) else sequenzaGiocatore.joinToString(", "),
+                    text = if (!viewModel.partitaInCorso) stringResource(R.string.press_the_start_button) else sequenzaGiocatore.joinToString(", "),
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
                 )

@@ -110,6 +110,7 @@ fun coloraSequenza(sequenza: String, indiceErrore: Int): androidx.compose.ui.tex
     return buildAnnotatedString {
         append(parteCorretta) // La parte corretta non ha bisogno di alcuna modifica
         if(parteSbagliata.isNotEmpty()){ // La devo colorare di rosso
+            if (parteCorretta.isNotEmpty()) append(", ")
             withStyle(style = SpanStyle(color = Color.Red, fontWeight = FontWeight.Bold)) {
                 append(parteSbagliata)
             }

@@ -55,6 +55,7 @@ class GameViewModel : ViewModel() {
             kotlinx.coroutines.delay(1000)
             sequenzaGiocatore = emptyList()
             for (colore in sequenzaComputer){ // Itero su ogni elemento della sequenza generata
+                if(!partitaInCorso) return@launch
                 while (isInPausa){
                     kotlinx.coroutines.delay(100) // Ogni 100 millisecondi controlla lo stato della variabile isInPausa. Se è True NON procede
                 }
@@ -111,19 +112,18 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    fun finePartita() {
+    fun finePartita() { // Invocata solamente quando l'utente preme il pulsante "Fine partita"
         partitaInCorso = false
 
-        if( sequenzaComputer.size == 1 ){
+        if( sequenzaComputer.size <= 1 ){ // Caso in cui viene premuto il tasto "Fine partita" durante la presentazione della prima sequenza
             sequenzaComputer = emptyList()
             sequenzaGiocatore = emptyList()
             return // Esco senza salvare dopo aver svuotato le due liste
         }
 
-        sequenzaGiocatore += "X" // Aggiungo un carattere fittizio quando l'utente preme "Fine partita"
         salvaPartitaDB()
         sequenzaComputer = emptyList()
         sequenzaGiocatore = emptyList()
-
+        coloreAttivo = null
     }
 }
