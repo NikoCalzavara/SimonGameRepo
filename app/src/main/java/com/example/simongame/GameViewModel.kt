@@ -39,6 +39,8 @@ class GameViewModel : ViewModel() {
     var isInPausa by mutableStateOf(false)
         private set
 
+    var mostraErrore by mutableStateOf(false) // Per eseguire l'animazione di errore quando l'utente sbaglia a premere
+
     fun avviaPartita() { // Invocata quando si preme "Avvia partita"
         partitaInCorso = true
         isTurnoComputer = true
@@ -93,6 +95,11 @@ class GameViewModel : ViewModel() {
             }
         } else { // Il giocatore ha sbagliato colore
             partitaInCorso = false
+            viewModelScope.launch {
+                mostraErrore = true // Accende il rosso (la variabile errore va a 0.7f)
+                kotlinx.coroutines.delay(600) // Aspetta 300 millisecondi
+                mostraErrore = false // Spegne il rosso (la variabile errore torna a 0f)
+            }
             salvaPartitaDB()
         }
     }

@@ -2,6 +2,8 @@ package com.example.simongame
 
 import android.content.res.Configuration
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,6 +43,16 @@ import androidx.navigation.NavController
 fun Schermata1(modifier: Modifier = Modifier, navController : NavController, viewModel: GameViewModel) {
     val orientation = LocalConfiguration.current.orientation
 
+    val errore by animateFloatAsState(
+        targetValue = if (viewModel.mostraErrore) 0.7f else 0f, // Opacità al 70% quando l'utente commette un errore
+        animationSpec = if (viewModel.mostraErrore) {
+            snap() // Accensione: Quando c'è l'errore, scatta a 0.7 istantaneamente
+        } else {
+            tween(durationMillis = 1000) // Spegnimento: Ci mette 1.5 secondi a tornare a 0
+        },
+        label = "animazione_errore"
+    )
+
     // Leggo lo stato dal ViewModel
     val sequenzaGiocatore = viewModel.sequenzaGiocatore
     val coloreAttivo = viewModel.coloreAttivo
@@ -48,72 +60,36 @@ fun Schermata1(modifier: Modifier = Modifier, navController : NavController, vie
     // Lo stato scende "verso il basso" come parametro
     // Gli eventi, invece, salgono verso l'alto come funzioni lambda. Nel nostro caso l'evento parte da Riquadro e deve arrivare a Schermata1
 
-    // Layout verticale
-    if(orientation == Configuration.ORIENTATION_PORTRAIT) {
-        Column(modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp), // Aggiungo del padding per non avere tutto a filo dello schermo
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            Matrice( // Matrice 3x2
-                modifier = Modifier.weight(3f),
-                coloreAttivo = coloreAttivo, // Passo alla matrice il colore che sta "suonando" il ViewModel
-                onColorClick = { coloreCliccato -> viewModel.colorePremuto(coloreCliccato) } // coloreCliccato rappresenta la stringa inviata dal riquadro
-            )
-
-            Text(modifier = modifier // Testo non editabile
-                .padding(vertical = 24.dp), // Aggiungo padding solo in verticale, non ai lati
-                // Utilizzo il metodo joinToString in quanto mi permette di convertire la lista in stringa e scegliere il separatore che preferisco
-                text = if (!viewModel.partitaInCorso) stringResource(R.string.press_the_start_button) else sequenzaGiocatore.joinToString(", "),
-                maxLines = 2,
-                minLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                fontSize = 30.sp,
-                fontWeight = FontWeight.Bold,
-            )
-
-            // I due bottoni
-            Pulsanti(
-                modifier = Modifier.fillMaxWidth(),
-                navController = navController,
-                viewModel = viewModel
-            )
-        }
-    }
-
-    // Layout orizzontale, matrice con affianco testo e pulsanti. Testo e pulsanti uno sotto l'altro
-    else {
-        Row(modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically,
-        ){
-            // Matrice 3x2
-            Matrice(
-                modifier = Modifier.weight(3f),
-                coloreAttivo = coloreAttivo,
-                onColorClick = { coloreCliccato -> viewModel.colorePremuto(coloreCliccato) } // coloreCliccato rappresenta la stringa inviata dal riquadro
-            )
-            // Colonna con dentro testo e pulsanti
+    Box(modifier = modifier.fillMaxSize()) { // Box che serve solo come contenitore
+        // Layout verticale
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             Column(
-                modifier = Modifier
-                    .weight(2f)
-                    .fillMaxHeight(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement =  Arrangement.Center
-            ){
-                Text(modifier = modifier
-                    .padding(horizontal = 24.dp)
-                    .padding(vertical = 12.dp),
-                    minLines = 4,
-                    maxLines = 4, // Supporto 2 righe in più rispetto al layout verticale
-                    overflow = TextOverflow.Ellipsis,
-                    text = if (!viewModel.partitaInCorso) stringResource(R.string.press_the_start_button) else sequenzaGiocatore.joinToString(", "),
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(16.dp), // Aggiungo del padding per non avere tutto a filo dello schermo
+                verticalArrangement = Arrangement.SpaceEvenly,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Matrice( // Matrice 3x2
+                    modifier = Modifier.weight(3f),
+                    coloreAttivo = coloreAttivo, // Passo alla matrice il colore che sta "suonando" il ViewModel
+                    onColorClick = { coloreCliccato -> viewModel.colorePremuto(coloreCliccato) } // coloreCliccato rappresenta la stringa inviata dal riquadro
                 )
+
+                Text(
+                    modifier = modifier // Testo non editabile
+                        .padding(vertical = 24.dp), // Aggiungo padding solo in verticale, non ai lati
+                    // Utilizzo il metodo joinToString in quanto mi permette di convertire la lista in stringa e scegliere il separatore che preferisco
+                    text = if (!viewModel.partitaInCorso) stringResource(R.string.press_the_start_button) else sequenzaGiocatore.joinToString(
+                        ", "
+                    ),
+                    maxLines = 2,
+                    minLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+
                 // I due bottoni
                 Pulsanti(
                     modifier = Modifier.fillMaxWidth(),
@@ -121,8 +97,59 @@ fun Schermata1(modifier: Modifier = Modifier, navController : NavController, vie
                     viewModel = viewModel
                 )
             }
-
         }
+
+        // Layout orizzontale, matrice con affianco testo e pulsanti. Testo e pulsanti uno sotto l'altro
+        else {
+            Row(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                // Matrice 3x2
+                Matrice(
+                    modifier = Modifier.weight(3f),
+                    coloreAttivo = coloreAttivo,
+                    onColorClick = { coloreCliccato -> viewModel.colorePremuto(coloreCliccato) } // coloreCliccato rappresenta la stringa inviata dal riquadro
+                )
+                // Colonna con dentro testo e pulsanti
+                Column(
+                    modifier = Modifier
+                        .weight(2f)
+                        .fillMaxHeight(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        modifier = modifier
+                            .padding(horizontal = 24.dp)
+                            .padding(vertical = 12.dp),
+                        minLines = 4,
+                        maxLines = 4, // Supporto 2 righe in più rispetto al layout verticale
+                        overflow = TextOverflow.Ellipsis,
+                        text = if (!viewModel.partitaInCorso) stringResource(R.string.press_the_start_button) else sequenzaGiocatore.joinToString(
+                            ", "
+                        ),
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    // I due bottoni
+                    Pulsanti(
+                        modifier = Modifier.fillMaxWidth(),
+                        navController = navController,
+                        viewModel = viewModel
+                    )
+                }
+
+            }
+        }
+        Box( // Box che si sovrappone a tutto
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Red.copy(alpha = errore))
+        )
     }
 }
 
