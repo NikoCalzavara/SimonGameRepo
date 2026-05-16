@@ -10,4 +10,6 @@
     <string name="pause">Pausa</string>
     <string name="press_the_start_button">Premi il pulsante avvia</string>
     <string name="back">Indietro</string>
+    <string name="maximum_correct_length">Lunghezza corretta massima</string>
+    <string name="complete_sequence">Sequenza completa</string>
 </resources>

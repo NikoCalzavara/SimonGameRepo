@@ -98,7 +98,7 @@ class GameViewModel : ViewModel() {
             viewModelScope.launch {
                 mostraErrore = true // Accende il rosso (la variabile errore va a 0.7f)
                 kotlinx.coroutines.delay(600) // Aspetta 300 millisecondi
-                mostraErrore = false // Spegne il rosso (la variabile errore torna a 0f)
+                mostraErrore = false // Spegne il rosso (la variabile errore torna a 0f con l'animazione prevista)
             }
             salvaPartitaDB()
         }

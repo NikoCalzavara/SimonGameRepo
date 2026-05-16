@@ -13,9 +13,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.room.Room
 import com.example.simongame.data.AppDatabase
 import com.example.simongame.ui.theme.SimonGameTheme
@@ -63,7 +65,25 @@ class MainActivity : ComponentActivity() {
                                 viewModel = gameViewModel // Devo passare il viewModel in quanto Schermata1 si occupa solo di fare da "Tramite" tra l'utente e i dati. I dati vengono gestiti dal ViewModel
                             )
                         }
-                        //TODO: aggiungere la schermata "dettaglio partita"
+                        composable(
+                            route = "dettaglio_partita/{lunghezza}/{indiceErrore}/{sequenza}",
+                            arguments = listOf(
+                                navArgument("lunghezza") { type = NavType.IntType },
+                                navArgument("indiceErrore") { type = NavType.IntType },
+                                navArgument("sequenza") { type = NavType.StringType }
+                            )
+                        ){ backStackEntry ->
+                            // Estraggo i dati che devo poi passare alla schermata "Dettaglio partita"
+                            val lunghezza = backStackEntry.arguments?.getInt("lunghezza") ?: 0
+                            val indice = backStackEntry.arguments?.getInt("indiceErrore") ?: 0
+                            val sequenza = backStackEntry.arguments?.getString("sequenza") ?: ""
+
+                            DettaglioPartita(
+                                lunghezza = lunghezza,
+                                indiceErrore = indice,
+                                sequenza = sequenza,
+                            )
+                        }
                     }
                 }
             }

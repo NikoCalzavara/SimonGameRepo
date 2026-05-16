@@ -16,4 +16,6 @@
     <string name="pause">Pause</string>
     <string name="press_the_start_button">Press the start button</string>
     <string name="back">Back</string>
+    <string name="maximum_correct_length">Maximum correct length</string>
+    <string name="complete_sequence">Complete sequence</string>
 </resources>

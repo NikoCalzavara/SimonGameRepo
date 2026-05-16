@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -88,6 +89,7 @@ fun Schermata1(modifier: Modifier = Modifier, navController : NavController, vie
                     overflow = TextOverflow.Ellipsis,
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
                 )
 
                 // I due bottoni
@@ -133,7 +135,8 @@ fun Schermata1(modifier: Modifier = Modifier, navController : NavController, vie
                             ", "
                         ),
                         fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
                     )
                     // I due bottoni
                     Pulsanti(

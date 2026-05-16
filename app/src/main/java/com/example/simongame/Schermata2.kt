@@ -1,5 +1,7 @@
 package com.example.simongame
 
+import android.net.Uri
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -63,7 +65,11 @@ fun Schermata2(modifier : Modifier = Modifier, navController: NavController, dao
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp), // Spazio tra un elemento e l'altro della lista
+                            .padding(vertical = 8.dp) // Spazio tra un elemento e l'altro della lista
+                            .clickable{ // Cosa fare quando una riga della lista viene cliccata
+                                val sequenzaEncode = Uri.encode(partita.sequenza)
+                                navController.navigate("dettaglio_partita/${partita.lunghezza}/${partita.indiceErrore}/$sequenzaEncode") // Passo 3 parametri al navigation controller
+                            },
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
