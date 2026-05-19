@@ -1,6 +1,8 @@
 package com.example.simongame
 
 import android.content.res.Configuration
+import android.media.SoundPool
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
@@ -20,20 +22,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -54,9 +55,44 @@ fun Schermata1(modifier: Modifier = Modifier, navController : NavController, vie
         label = "animazione_errore"
     )
 
+    val context = LocalContext.current
+    val soundPool = remember { SoundPool.Builder().setMaxStreams(4).build() } // Inizializzo l'oggetto SoundPool
+
+    // Ora carico i dati in memoria, questa operazione viene fatta una sola volta a ogni avvio dell'applicazione grazie al "remember"
+    val suonoDo = remember { soundPool.load(context, R.raw.do_, 1) }
+    val suonoRe = remember { soundPool.load(context, R.raw.re, 1) }
+    val suonoMi = remember { soundPool.load(context, R.raw.mi, 1) }
+    val suonoFa = remember { soundPool.load(context, R.raw.fa, 1) }
+    val suonoSol = remember { soundPool.load(context, R.raw.sol, 1) }
+    val suonoLa = remember { soundPool.load(context, R.raw.la, 1) }
+    val suonoErrore = remember { soundPool.load(context, R.raw.game_over, 1) }
+
     // Leggo lo stato dal ViewModel
     val sequenzaGiocatore = viewModel.sequenzaGiocatore
     val coloreAttivo = viewModel.coloreAttivo
+
+    LaunchedEffect(coloreAttivo) { // Osservo la variabile coloreAttivo per capire che suono riprodurre ogni volta che cambia
+        if(coloreAttivo != null) {
+            val suonoDaRiprodurre = when (coloreAttivo){
+                context.getString(R.string.r) -> suonoDo
+                context.getString(R.string.g) -> suonoRe
+                context.getString(R.string.b) -> suonoMi
+                context.getString(R.string.m) -> suonoFa
+                context.getString(R.string.y) -> suonoSol
+                context.getString(R.string.c) -> suonoLa
+                else -> null
+            }
+            suonoDaRiprodurre?.let { id -> // Controllo con l'operatore "?." se la variabile non è null, se non lo è eseguo il codice dentro le parentesi
+                soundPool.play(id, 1f, 1f, 0, 0, 1f)
+            }
+        }
+    }
+
+    LaunchedEffect(viewModel.mostraErrore) { // Riproduce il suono quando l'utente sbaglia
+        if(viewModel.mostraErrore){
+            soundPool.play(suonoErrore, 1f, 1f, 0, 0, 1f)
+        }
+    }
 
     // Lo stato scende "verso il basso" come parametro
     // Gli eventi, invece, salgono verso l'alto come funzioni lambda. Nel nostro caso l'evento parte da Riquadro e deve arrivare a Schermata1
