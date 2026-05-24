@@ -1,6 +1,7 @@
 package com.example.simongame
 
 import android.content.res.Configuration
+import androidx.activity.compose.BackHandler
 import android.media.SoundPool
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.snap
@@ -43,6 +44,11 @@ import androidx.navigation.NavController
 // Il Modifier invece ha un valore di default
 fun Schermata1(modifier: Modifier = Modifier, navController : NavController, viewModel: GameViewModel) {
     val orientation = LocalConfiguration.current.orientation
+
+    BackHandler(enabled = viewModel.partitaInCorso) { // Intercetto la pressione del tasto back quando la partita è in corso
+        viewModel.finePartita() // Se c'è una partita in corso forzo la stessa logica del pulsante "fine partita"
+        navController.popBackStack() // Torno alla lista delle partite
+    }
 
     val errore by animateFloatAsState(
         targetValue = if (viewModel.mostraErrore) 0.7f else 0f, // Opacità al 70% quando l'utente commette un errore
