@@ -2,7 +2,6 @@ package com.example.simongame
 
 import android.content.res.Configuration
 import android.media.SoundPool
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween

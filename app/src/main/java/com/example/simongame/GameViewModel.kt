@@ -104,10 +104,11 @@ class GameViewModel : ViewModel() {
         }
     }
 
-    private fun salvaPartitaDB(){ // Funzione che "prepara" tutti i dati da salvare nel database e li salva
+    // Funzione che "prepara" tutti i dati da salvare nel database e li salva
+    private fun salvaPartitaDB(isResa: Boolean = false){ // isResa è true se l'utente ha cliccato il tasto "Fine Partita"
         val lunghezzaCorretta = maxOf(0, sequenzaComputer.size - 1 ) // -1 perchè se ho premuto 3 colori e ho sbagliato il terzo, quelli corretti sono 2
         val sequenzaStringa = sequenzaComputer.joinToString(", ")
-        val indiceSbagliato = maxOf(0, sequenzaGiocatore.size - 1)
+        val indiceSbagliato = if (isResa) sequenzaGiocatore.size else maxOf(0, sequenzaGiocatore.size - 1)
         val partitaDaSalvare = Partita(
             lunghezza = lunghezzaCorretta,
             sequenza = sequenzaStringa,
@@ -128,7 +129,7 @@ class GameViewModel : ViewModel() {
             return // Esco senza salvare dopo aver svuotato le due liste
         }
 
-        salvaPartitaDB()
+        salvaPartitaDB(true) // "Avviso" il database che l'utente si è arreso
         sequenzaComputer = emptyList()
         sequenzaGiocatore = emptyList()
         coloreAttivo = null
