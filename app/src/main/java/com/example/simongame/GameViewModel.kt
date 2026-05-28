@@ -3,6 +3,7 @@ package com.example.simongame
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.simongame.data.Partita
@@ -13,7 +14,15 @@ import kotlinx.coroutines.launch
 *  Così facendo sarò in grado di gestire la logica del gioco in maniera indipendente dalle varie ricomposizioni della UI,
 *  potendo quindi gestire i cambi di configurazione durante la riproduzione, le coroutine... */
 
-class GameViewModel : ViewModel() {
+class GameViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
+
+    companion object { // Definisco le chiavi per il salvataggio della partita in corso
+        private const val SEQUENZA_COMPUTER = "sequenza_computer"
+        private const val SEQUENZA_GIOCATORE = "sequenza_giocatore"
+        private const val IS_TURNO_COMPUTER = "is_turno_computer"
+        private const val PARTITA_IN_CORSO = "partita_in_corso"
+        private const val IS_IN_PAUSA = "is_in_pausa"
+    }
 
     lateinit var dao: PartitaDao
 
@@ -40,6 +49,27 @@ class GameViewModel : ViewModel() {
         private set
 
     var mostraErrore by mutableStateOf(false) // Per eseguire l'animazione di errore quando l'utente sbaglia a premere
+
+    init { // Ripristino i dati di una partita precedente, se non sono null, ovvero se esistono
+        savedStateHandle.get<List<String>>(SEQUENZA_COMPUTER)?.let { sequenzaComputer = it }
+        savedStateHandle.get<List<String>>(SEQUENZA_GIOCATORE)?.let { sequenzaGiocatore = it }
+        savedStateHandle.get<Boolean>(IS_TURNO_COMPUTER)?.let { isTurnoComputer = it }
+        savedStateHandle.get<Boolean>(PARTITA_IN_CORSO)?.let { partitaInCorso = it }
+        savedStateHandle.get<Boolean>(IS_IN_PAUSA)?.let { isInPausa = it }
+
+        // Se la partita era in corso ed era il turno del computer, facciamo ripartire la sequenza
+        if (partitaInCorso && isTurnoComputer && sequenzaComputer.isNotEmpty()) {
+            riproduciSequenzaComputer()
+        }
+    }
+
+    fun salvaStato() {  // Funzione che viene invocata dalla UI per salvare lo stato della partita corrente
+        savedStateHandle[SEQUENZA_COMPUTER] = sequenzaComputer
+        savedStateHandle[SEQUENZA_GIOCATORE] = sequenzaGiocatore
+        savedStateHandle[IS_TURNO_COMPUTER] = isTurnoComputer
+        savedStateHandle[PARTITA_IN_CORSO] = partitaInCorso
+        savedStateHandle[IS_IN_PAUSA] = isInPausa
+    }
 
     fun avviaPartita() { // Invocata quando si preme "Avvia partita"
         partitaInCorso = true

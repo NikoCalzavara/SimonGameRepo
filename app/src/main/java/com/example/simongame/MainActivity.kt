@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -19,6 +20,8 @@ import com.example.simongame.data.AppDatabase
 import com.example.simongame.ui.theme.SimonGameTheme
 
 class MainActivity : ComponentActivity() {
+    val gameViewModel: GameViewModel by viewModels() // Creo il ViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -36,8 +39,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SimonGameTheme {
-
-                val gameViewModel: GameViewModel = viewModel() // Creo il ViewModel
                 gameViewModel.dao = dao // Associo immediatamente il dao al ViewModel prima che venga utilizzato per evitare errori
 
                 // Implementazione della navigazione tra schermate
@@ -86,5 +87,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        gameViewModel.salvaStato()
     }
 }
